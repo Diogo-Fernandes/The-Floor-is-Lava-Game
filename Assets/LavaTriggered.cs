@@ -53,7 +53,15 @@ public class LavaTriggered : MonoBehaviour
         Debug.Log("Caiu na lava");
         /*burnAudio.clip = burn;
         burnAudio.Play();*/
-        Player.transform.position = respawnPoint.transform.position;
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "SampleScene")
+        {
+            SceneManager.LoadScene("SampleScene");
+        }
+        else
+        {
+            Player.transform.position = respawnPoint.transform.position;
+        }
         //SceneManager.LoadScene(scene.name);
     }
 }

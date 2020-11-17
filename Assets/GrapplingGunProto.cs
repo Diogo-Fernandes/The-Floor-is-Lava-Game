@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrapplingGun : MonoBehaviour
+public class GrapplingGunProto : MonoBehaviour
 {
     private LineRenderer lr;
     private Vector3 grapplePoint;
@@ -50,15 +50,10 @@ public class GrapplingGun : MonoBehaviour
             float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
 
             //The distance grapple will try to keep from grapple point. 
-            joint.maxDistance = distanceFromPoint * 0.26f;
-            //joint.maxDistance = distanceFromPoint * 0.8f;
+            joint.maxDistance = distanceFromPoint * 0.8f;
             joint.minDistance = distanceFromPoint * 0.25f;
 
             //Adjust these values to fit your game.
-            /*joint.spring = 500f;
-            joint.damper = 0.1f;
-            joint.massScale = 1f;*/
-
             joint.spring = 10f;
             joint.damper = 0.5f;
             joint.massScale = 20f;

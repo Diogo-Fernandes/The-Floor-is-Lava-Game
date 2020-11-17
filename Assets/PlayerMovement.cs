@@ -3,6 +3,8 @@
 
 using System;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour {
 
@@ -10,9 +12,13 @@ public class PlayerMovement : MonoBehaviour {
     //Assignables
     public Transform playerCam;
     public Transform orientation;
-    
+    public TextMeshProUGUI countdownDisplay;
+    public AudioSource jump;
+    public TextMeshProUGUI scoreText;
+
     //Other
     private Rigidbody rb;
+    private int score;
 
     //Rotation and look
     private float xRotation;
@@ -54,6 +60,22 @@ public class PlayerMovement : MonoBehaviour {
     bool isWallRight, isWallLeft;
     bool isWallRunning;
     public float maxWallRunCameraTilt, wallRunCameraTilt;
+
+    void SetScoreText()
+    {
+        scoreText.text = score.ToString() + " x / 10";
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("IceCream"))
+        {
+            score++;
+            Debug.Log(score);
+            other.gameObject.SetActive(false);
+
+            SetScoreText();
+        }
+    }
 
     private void WallRunInput()
     {
@@ -101,14 +123,30 @@ public class PlayerMovement : MonoBehaviour {
     }
     
     void Start() {
+        Scene scene = SceneManager.GetActiveScene();
         playerScale =  transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        jump = GetComponent<AudioSource>();
+        score = 0;
+
+        SetScoreText();
     }
 
     
     private void FixedUpdate() {
-        Movement();
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "LowPolyInterior_Demo")
+        {
+            if (countdownDisplay.gameObject.activeSelf == false)
+            {
+                Movement();
+            }
+        }
+        else
+        {
+            Movement();    
+        };
     }
 
     private void Update() {
@@ -117,7 +155,7 @@ public class PlayerMovement : MonoBehaviour {
         CheckForWall();
         WallRunInput();
 
-        Debug.Log("readyJump: " + readyToJump + "; grounded: " +grounded);
+        //Debug.Log("readyJump: " + readyToJump + "; grounded: " +grounded);
     }
 
     /// <summary>
@@ -205,6 +243,10 @@ public class PlayerMovement : MonoBehaviour {
             //Add jump forces
             rb.AddForce(Vector2.up * jumpForce * 1.5f);
             rb.AddForce(normalVector * jumpForce * 0.5f);
+            if (!jump.isPlaying)
+            {
+                jump.Play();
+            }
             
             //If jumping while falling, reset y velocity.
             Vector3 vel = rb.velocity;

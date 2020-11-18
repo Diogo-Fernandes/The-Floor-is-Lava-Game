@@ -3,6 +3,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovementProto : MonoBehaviour
 {
@@ -123,6 +124,11 @@ public class PlayerMovementProto : MonoBehaviour
         WallRunInput();
 
         Debug.Log("readyJump: " + readyToJump + "; grounded: " + grounded);
+
+        if(transform.position.y < -40)
+        {
+            SceneManager.LoadScene("SampleScene");
+        }
     }
 
     /// <summary>
